@@ -22,7 +22,7 @@ public abstract class Processor {
             LOGGER.error(String.format("Packet %s not found supported processor ", packet));
             Packet notFoundServicePacket = new Packet(packet.getServiceType());
             // todo add body
-            userConnection.resPacket(notFoundServicePacket);
+            userConnection.sendPacket(notFoundServicePacket);
         } else {
             packetService.get().processPacket(packet, userConnection);
         }

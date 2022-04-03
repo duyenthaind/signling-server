@@ -23,4 +23,20 @@ public class Constants {
             return name;
         }
     }
+
+    public enum ResponseType {
+        OK(0),
+        NOT_PERMITTED(403),
+        NOT_FOUND(404)
+        ;
+        private final int res;
+
+        ResponseType(int res) {
+            this.res = res;
+        }
+
+        public int getRes() {
+            return res;
+        }
+    }
 }

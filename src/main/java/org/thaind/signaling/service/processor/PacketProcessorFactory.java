@@ -18,6 +18,9 @@ public class PacketProcessorFactory {
     private static final Logger LOGGER = LogManager.getLogger("PacketProcessorFactory");
     private static final Map<Integer, Class<? extends PacketService>> SERVICES = new ConcurrentHashMap<>();
 
+    private PacketProcessorFactory() {
+    }
+
     static {
         SERVICES.put(PacketServiceType.SAMPLE.getServiceType(), SamplePacketService.class);
     }
