@@ -1,13 +1,20 @@
 package org.thaind.signaling.dto;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
+import io.netty.handler.codec.http.websocketx.CloseWebSocketFrame;
 import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.Timer;
 import io.netty.util.TimerTask;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.thaind.signaling.cache.ChatConversationManager;
 import org.thaind.signaling.cache.UserConnectionManager;
 import org.thaind.signaling.exception.TooManyDeviceException;
 
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -16,57 +23,71 @@ import java.util.concurrent.TimeUnit;
 public class UserConnection {
 
     private static final Timer TIMER = new HashedWheelTimer();
+    private static final Logger LOGGER = LogManager.getLogger("UserConnection");
+
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final boolean isForCall;
 
     private Channel webSocketChannel;
     private long lastTimeReceivePacket = System.currentTimeMillis();
-    private final String userId;
-    private Timeout timeoutPing;
-    private final boolean isForCall;
+    private String userId;
+    private final Timeout timeoutAuthenticate;
     private CallRoom callRoom;
+    private List<ChatConversation> listConversations = new CopyOnWriteArrayList<>();
 
-    public UserConnection(String userId, boolean isForCall) throws TooManyDeviceException {
-        this.userId = userId;
+    public UserConnection(boolean isForCall) {
         this.isForCall = isForCall;
-        createTimeoutPing(this);
+        timeoutAuthenticate = TIMER.newTimeout(new TimerTask() {
+            @Override
+            public void run(Timeout timeout) throws Exception {
+                LOGGER.error("After 45s but receive no authentication packet, remove this connection " + webSocketChannel);
+                webSocketChannel.writeAndFlush(new CloseWebSocketFrame());
+                webSocketChannel.close();
+            }
+        }, 45, TimeUnit.SECONDS);
+    }
+
+    public void authenticate() throws TooManyDeviceException {
+        //todo authenticate user, set userId
+        if (timeoutAuthenticate != null) {
+            timeoutAuthenticate.cancel();
+        }
         UserConnection res = UserConnectionManager.getInstance().addNewConnection(this);
         if (res != null) {
             throw new TooManyDeviceException();
         }
-    }
-
-    private void createTimeoutPing(UserConnection userConnection) {
-        if (timeoutPing != null) {
-            timeoutPing.cancel();
-        }
-        timeoutPing = TIMER.newTimeout(new TimerTask() {
-            @Override
-            public void run(Timeout timeout) throws Exception {
-                // todo send ping
-                boolean pingOk = false;
-                if (pingOk) {
-                    createTimeoutPing(userConnection);
-                } else {
-                    userConnection.disconnect();
-                }
-            }
-        }, 60, TimeUnit.SECONDS);
+        addToConversation();
     }
 
     public void sendPacket(Packet packet) {
-        // todo: logic send res packet
+        try {
+            this.webSocketChannel.writeAndFlush(objectMapper.writeValueAsString(packet));
+        } catch (Exception ex) {
+            LOGGER.error("Error send packet", ex);
+        }
     }
 
     public void disconnect() {
-        UserConnectionManager.getInstance().removeConnection(this);
-        if (webSocketChannel != null) {
-            webSocketChannel.close();
+        try {
+            LOGGER.info(String.format("Connection with channel %s, on disconnect", this.webSocketChannel));
+            if (callRoom != null) {
+                callRoom.userLeaveRoom(this);
+            }
+            if (webSocketChannel != null) {
+                webSocketChannel.close();
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Remove connection error");
+        } finally {
+            listConversations.forEach(val -> val.removeConnection(this));
+            UserConnectionManager.getInstance().removeConnection(this);
         }
-        if (timeoutPing != null) {
-            timeoutPing.cancel();
-        }
-        if (callRoom != null) {
-            callRoom.userLeaveRoom(this);
-        }
+
+    }
+
+    private void addToConversation() {
+        listConversations = ChatConversationManager.getInstance().getAllConversationOfUser(this.userId);
+        listConversations.forEach(val -> val.addConnection(this));
     }
 
     public Channel getWebSocketChannel() {

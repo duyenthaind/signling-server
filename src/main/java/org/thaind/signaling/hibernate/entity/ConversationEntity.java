@@ -52,4 +52,14 @@ public class ConversationEntity extends AbstractEntity implements Serializable {
     public void setSeq(long seq) {
         this.seq = seq;
     }
+
+    @Override
+    public String toString() {
+        return "ConversationEntity{" +
+                "id='" + id + '\'' +
+                ", creator='" + creator + '\'' +
+                ", withUser='" + withUser + '\'' +
+                ", seq=" + seq +
+                '}';
+    }
 }

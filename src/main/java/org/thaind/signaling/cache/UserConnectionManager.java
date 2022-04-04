@@ -1,7 +1,10 @@
 package org.thaind.signaling.cache;
 
+import org.apache.commons.lang3.StringUtils;
 import org.thaind.signaling.dto.UserConnection;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -30,6 +33,9 @@ public class UserConnectionManager {
     }
 
     public void removeConnection(UserConnection userConnection) {
+        if (StringUtils.isEmpty(userConnection.getUserId())) {
+            return;
+        }
         if (!userConnection.isForCall()) {
             mapConnections.remove(userConnection.getUserId());
         } else {
@@ -41,6 +47,10 @@ public class UserConnectionManager {
         synchronized (mapConnections) {
             return mapConnections.get(userId);
         }
+    }
+
+    public List<UserConnection> getAllConnections() {
+        return new ArrayList<>(mapConnections.values());
     }
 
     public static UserConnectionManager getInstance() {

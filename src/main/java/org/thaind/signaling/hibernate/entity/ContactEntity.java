@@ -41,4 +41,13 @@ public class ContactEntity extends AbstractEntity implements Serializable {
     public void setContactId(String contactId) {
         this.contactId = contactId;
     }
+
+    @Override
+    public String toString() {
+        return "ContactEntity{" +
+                "id=" + id +
+                ", creator='" + creator + '\'' +
+                ", contactId='" + contactId + '\'' +
+                '}';
+    }
 }

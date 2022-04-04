@@ -28,4 +28,12 @@ public abstract class AbstractEntity {
     public void setUpdatedAt(long updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractEntity{" +
+                "createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
+    }
 }

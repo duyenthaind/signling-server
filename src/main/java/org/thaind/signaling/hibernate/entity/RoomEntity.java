@@ -42,4 +42,13 @@ public class RoomEntity extends AbstractEntity implements Serializable {
     public void setWithUser(String withUser) {
         this.withUser = withUser;
     }
+
+    @Override
+    public String toString() {
+        return "RoomEntity{" +
+                "id='" + id + '\'' +
+                ", creator='" + creator + '\'' +
+                ", withUser='" + withUser + '\'' +
+                '}';
+    }
 }

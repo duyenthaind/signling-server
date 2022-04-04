@@ -8,6 +8,7 @@ import org.thaind.signaling.cache.RoomCallManager;
 import org.thaind.signaling.dto.internal.protocol.Response;
 import org.thaind.signaling.hibernate.entity.RoomEntity;
 import org.thaind.signaling.repository.RoomRepository;
+import org.thaind.signaling.repository.impl.RoomRepositoryImpl;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,8 +26,7 @@ public class CallRoom {
     private Timeout timeoutJoinRoom;
     private RoomEntity roomEntity;
 
-    // todo load room repository
-    private final RoomRepository repository = null;
+    private final RoomRepository repository = new RoomRepositoryImpl();
 
     public CallRoom(String roomId) {
         this.roomId = roomId;
@@ -35,11 +35,10 @@ public class CallRoom {
         createTimeoutJoinRoom(this);
     }
 
-    public Response userJoinRoom(UserConnection userConnection, String roomToken) {
+    public Response userJoinRoom(UserConnection userConnection) {
         if (roomEntity == null) {
             return Response.notFound();
         }
-        //todo parse roomToken first
         if (!roomEntity.getCreator().equals(userConnection.getUserId().trim()) && !roomEntity.getWithUser().equals(userConnection.getUserId().trim())) {
             return Response.notPermitted("You have no permission to join this room");
         }
@@ -58,9 +57,14 @@ public class CallRoom {
         }
     }
 
-    public void notifyPacketToAllUser(Packet packet) {
+    public void sendPacketToOtherConnection(Packet packet, UserConnection userConnection) {
+        if (this.userConnections.contains(userConnection)) {
+            return;
+        }
         for (UserConnection connection : userConnections) {
-            connection.sendPacket(packet);
+            if (!userConnection.equals(connection) && !userConnection.getUserId().equals(connection.getUserId())) {
+                connection.sendPacket(packet);
+            }
         }
     }
 

@@ -47,4 +47,15 @@ public interface CRUDRepository<T extends AbstractEntity, ID> {
         }
         return t;
     }
+
+    default T saveOrUpdate(T t) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            session.getTransaction().begin();
+            session.saveOrUpdate(t);
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            LOGGER.error("Save error ", ex);
+        }
+        return t;
+    }
 }
