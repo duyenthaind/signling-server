@@ -44,4 +44,8 @@ public class Response {
     public static Response notFound() {
         return new Response(Constants.ResponseType.NOT_FOUND.getRes(), "Not found");
     }
+
+    public static Response forbidden(String msg) {
+        return new Response(Constants.ResponseType.UNAUTHORIZED.getRes(), msg);
+    }
 }
