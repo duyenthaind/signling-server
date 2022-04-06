@@ -2,6 +2,7 @@ package org.thaind.signaling.worker;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.json.JSONObject;
 import org.thaind.signaling.cache.UserConnectionManager;
 import org.thaind.signaling.common.Constants;
 import org.thaind.signaling.dto.Packet;
@@ -25,8 +26,8 @@ public class PingWorker implements Runnable {
         while (true) {
             LOGGER.info("Check ping and remove idle connection!");
             Packet pingPacket = new Packet();
-            pingPacket.setServiceType(Constants.PacketServiceType.PING.getServiceType());
-            pingPacket.setBody("{}");
+            pingPacket.setServiceType(Constants.PacketServiceType.PING);
+            pingPacket.setBody(new JSONObject());
             List<UserConnection> allConnections = UserConnectionManager.getInstance().getAllConnections();
             for (UserConnection connection : allConnections) {
                 connection.sendPacket(pingPacket);

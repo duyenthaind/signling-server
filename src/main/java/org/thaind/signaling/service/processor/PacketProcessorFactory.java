@@ -16,18 +16,22 @@ import static org.thaind.signaling.common.Constants.PacketServiceType;
 public class PacketProcessorFactory {
 
     private static final Logger LOGGER = LogManager.getLogger("PacketProcessorFactory");
-    private static final Map<Integer, Class<? extends PacketService>> SERVICES = new ConcurrentHashMap<>();
+    private static final Map<PacketServiceType, Class<? extends PacketService>> SERVICES = new ConcurrentHashMap<>();
 
     private PacketProcessorFactory() {
     }
 
     static {
-        SERVICES.put(PacketServiceType.SAMPLE.getServiceType(), SamplePacketService.class);
+        SERVICES.put(PacketServiceType.SAMPLE, SamplePacketService.class);
+        SERVICES.put(PacketServiceType.PING, PingPacketService.class);
+        SERVICES.put(PacketServiceType.AUTHENTICATE, AuthenticationPacketService.class);
+        SERVICES.put(PacketServiceType.JOIN_CONVERSATION, JoinConversationPacketService.class);
+        SERVICES.put(PacketServiceType.JOIN_ROOM, JoinRoomPacketService.class);
     }
 
-    public static Optional<PacketService> factoryService(int serviceType) {
+    public static Optional<PacketService> factoryService(PacketServiceType packetServiceType) {
         try {
-            Class<? extends PacketService> clazz = SERVICES.get(serviceType);
+            Class<? extends PacketService> clazz = SERVICES.get(packetServiceType);
             if (clazz == null) {
                 return Optional.empty();
             }

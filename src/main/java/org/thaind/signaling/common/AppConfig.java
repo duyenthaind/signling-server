@@ -4,16 +4,25 @@ package org.thaind.signaling.common;
  * @author duyenthaind
  */
 public class AppConfig {
-    private int serverPort = 8088;
+    private int websocketServerPort = 8088;
+    private int socketIoServerPort = 8808;
     private String jwtSecret = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY0OTEyMjc2MiwiaWF0IjoxNjQ5MTIyNzYyfQ.nEsZzxLDXOYJQzbpyXemkqF2wONJSufoKkbl1BlKK0A";
     private int timeoutPing = 30;
 
-    public int getServerPort() {
-        return serverPort;
+    public int getWebsocketServerPort() {
+        return websocketServerPort;
     }
 
-    public void setServerPort(int serverPort) {
-        this.serverPort = serverPort;
+    public void setWebsocketServerPort(int websocketServerPort) {
+        this.websocketServerPort = websocketServerPort;
+    }
+
+    public int getSocketIoServerPort() {
+        return socketIoServerPort;
+    }
+
+    public void setSocketIoServerPort(int socketIoServerPort) {
+        this.socketIoServerPort = socketIoServerPort;
     }
 
     public String getJwtSecret() {

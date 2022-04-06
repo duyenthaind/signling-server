@@ -4,7 +4,9 @@ import io.netty.util.HashedWheelTimer;
 import io.netty.util.Timeout;
 import io.netty.util.Timer;
 import io.netty.util.TimerTask;
+import org.json.JSONObject;
 import org.thaind.signaling.cache.RoomCallManager;
+import org.thaind.signaling.common.Constants;
 import org.thaind.signaling.dto.internal.protocol.Response;
 import org.thaind.signaling.hibernate.entity.RoomEntity;
 import org.thaind.signaling.repository.RoomRepository;
@@ -58,7 +60,7 @@ public class CallRoom {
     }
 
     public void sendPacketToOtherConnection(Packet packet, UserConnection userConnection) {
-        if (this.userConnections.contains(userConnection)) {
+        if (!this.userConnections.contains(userConnection)) {
             return;
         }
         for (UserConnection connection : userConnections) {
@@ -69,15 +71,26 @@ public class CallRoom {
     }
 
     private void notifyNewUserJoinRoom(UserConnection connection) {
-        // todo notify new user join packet
+        Packet packet = new Packet();
+        packet.setServiceType(Constants.PacketServiceType.USER_JOINED_ROOM);
+        packet.setBody(new JSONObject());
+        sendPacketToOtherConnection(packet, connection);
     }
 
     private void notifyUserLeaveRoom(UserConnection connection) {
-        // todo notify new user lave packet
+        Packet packet = new Packet();
+        packet.setServiceType(Constants.PacketServiceType.USER_LEAVE_ROOM_OR_TIMEOUT);
+        packet.setBody(new JSONObject());
+        sendPacketToOtherConnection(packet, connection);
     }
 
     private void notifyAllTimeout() {
-        // todo timeout all but user not pickup
+        Packet packet = new Packet();
+        packet.setServiceType(Constants.PacketServiceType.TIMEOUT_PICKUP);
+        packet.setBody(new JSONObject());
+        for (UserConnection connection : userConnections) {
+            connection.sendPacket(packet);
+        }
     }
 
     private void createTimeoutJoinRoom(CallRoom callRoom) {
