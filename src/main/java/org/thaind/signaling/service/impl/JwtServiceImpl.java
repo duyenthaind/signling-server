@@ -36,7 +36,7 @@ public class JwtServiceImpl implements JwtService {
             } catch (ExpiredJwtException ex) {
                 return Response.forbidden(Constants.JWTResponseAuthen.EXPIRED.toString());
             } catch (Exception ex) {
-                return Response.forbidden(Constants.JWTResponseAuthen.UNDEFINED.toString());
+                return Response.forbidden(Constants.JWTResponseAuthen.UNDEFINED + ex.toString());
             }
         }
         return Response.ok();

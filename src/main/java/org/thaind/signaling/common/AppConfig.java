@@ -4,9 +4,9 @@ package org.thaind.signaling.common;
  * @author duyenthaind
  */
 public class AppConfig {
-    private int serverPort;
-    private String jwtSecret;
-    private int timeoutPing;
+    private int serverPort = 8088;
+    private String jwtSecret = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY0OTEyMjc2MiwiaWF0IjoxNjQ5MTIyNzYyfQ.nEsZzxLDXOYJQzbpyXemkqF2wONJSufoKkbl1BlKK0A";
+    private int timeoutPing = 30;
 
     public int getServerPort() {
         return serverPort;

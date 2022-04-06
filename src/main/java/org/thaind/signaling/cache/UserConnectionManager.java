@@ -49,7 +49,6 @@ public class UserConnectionManager {
         }
     }
 
-    // todo test this function, if connection is not change to new object
     public List<UserConnection> getAllConnections() {
         return new ArrayList<>(mapConnections.values());
     }
