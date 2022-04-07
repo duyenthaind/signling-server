@@ -40,4 +40,14 @@ public class AppConfig {
     public void setTimeoutPing(int timeoutPing) {
         this.timeoutPing = timeoutPing;
     }
+
+    @Override
+    public String toString() {
+        return "AppConfig{" +
+                "\nwebsocketServerPort=" + websocketServerPort +
+                ",\n socketIoServerPort=" + socketIoServerPort +
+                ",\n jwtSecret='" + jwtSecret + '\'' +
+                ",\n timeoutPing=" + timeoutPing +
+                "\n}";
+    }
 }

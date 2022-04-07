@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author duyenthai
@@ -31,5 +32,25 @@ public class ConversationRepositoryImpl implements ConversationRepository {
             LOGGER.error("Find contact by id error ", ex);
         }
         return null;
+    }
+
+    @Override
+    public Optional<ConversationEntity> findByCreatorAndWithUser(String creator, String withUser) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+            CriteriaQuery<ConversationEntity> criteriaQuery = criteriaBuilder.createQuery(ConversationEntity.class);
+            Root<ConversationEntity> rootObject = criteriaQuery.from(ConversationEntity.class);
+            criteriaQuery.select(rootObject)
+                    .where(criteriaBuilder.equal(rootObject.get("creator"), creator))
+                    .where(criteriaBuilder.equal(rootObject.get("withUser"), withUser));
+            Query<ConversationEntity> query = session.createQuery(criteriaQuery);
+            List<ConversationEntity> list = query.getResultList();
+            if (!list.isEmpty()) {
+                return Optional.of(list.get(0));
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Find by creator and with user error ", ex);
+        }
+        return Optional.empty();
     }
 }

@@ -46,6 +46,10 @@ public class JoinRoomPacketService implements PacketService {
             magic = -1;
             msg = "Not for call";
         }
+        if (userConnection.getCallRoom() != null) {
+            magic = -2;
+            msg = "User in another room";
+        }
         String roomId = requestBody.optString("roomId", "");
         if (magic == 0 && StringUtils.isEmpty(roomId)) {
             LOGGER.error("RoomId not found in payload, this request is malformed");
@@ -66,7 +70,7 @@ public class JoinRoomPacketService implements PacketService {
                 magic = internalResponse.getRes();
                 msg = internalResponse.getMessage();
             } else {
-                onJoinRoomOk(resPacket, userConnection, roomId);
+                onJoinRoomOk(resPacket, userConnection, room.get());
             }
         }
         resPacket.setField(ResponseField.RES.getField(), magic);
@@ -90,11 +94,12 @@ public class JoinRoomPacketService implements PacketService {
         return Optional.empty();
     }
 
-    void onJoinRoomOk(Packet resPacket, UserConnection userConnection, String roomId) {
-        LOGGER.info(String.format("User %s joined room with id %s ", userConnection.getUserId(), roomId));
-        resPacket.setField(ResponseField.ROOM_ID.getField(), roomId);
+    void onJoinRoomOk(Packet resPacket, UserConnection userConnection, CallRoom room) {
+        LOGGER.info(String.format("User %s joined room with id %s ", userConnection.getUserId(), room.getRoomId()));
+        resPacket.setField(ResponseField.ROOM_ID.getField(), room.getRoomId());
         JSONObject customData = new JSONObject();
         customData.put("joined", true);
         resPacket.setField(ResponseField.DATA.getField(), customData);
+        userConnection.setCallRoom(room);
     }
 }

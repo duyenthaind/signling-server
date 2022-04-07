@@ -53,6 +53,7 @@ public class JoinConversationPacketService implements PacketService {
             LOGGER.info(String.format("Get conversation with convId %s, last time new message %s", chatConversation.getLastTimeNewMessage()));
             Response internalResponse = chatConversation.addConnection(userConnection);
             if (Response.ok().equals(internalResponse)) {
+                userConnection.userJoinConversation(chatConversation);
                 Response resAddOther = addOtherConnection(userConnection.getUserId(), chatConversation);
                 if (!Response.ok().equals(resAddOther)) {
                     magic = resAddOther.getRes();

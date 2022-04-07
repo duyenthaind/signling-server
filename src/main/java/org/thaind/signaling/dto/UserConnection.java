@@ -85,7 +85,7 @@ public class UserConnection {
             if (webSocketChannel != null) {
                 webSocketChannel.close();
             }
-            if(socketIOClient != null){
+            if (socketIOClient != null) {
                 socketIOClient.disconnect();
             }
         } catch (Exception ex) {
@@ -95,6 +95,12 @@ public class UserConnection {
             UserConnectionManager.getInstance().removeConnection(this);
         }
 
+    }
+
+    public void userJoinConversation(ChatConversation conversation) {
+        if (!listConversations.contains(conversation)) {
+            listConversations.add(conversation);
+        }
     }
 
     private void addToConversation() {
