@@ -1,5 +1,6 @@
 package org.thaind.signaling.service.processor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.json.JSONObject;
@@ -10,6 +11,10 @@ import org.thaind.signaling.processors.Processor;
 import org.thaind.signaling.repository.ConversationRepository;
 import org.thaind.signaling.repository.impl.ConversationRepositoryImpl;
 import org.thaind.signaling.service.PacketService;
+
+import java.util.Optional;
+
+import static org.thaind.signaling.common.Constants.ResponseField;
 
 /**
  * @author duyenthaind
@@ -43,6 +48,17 @@ public class ChatCreateConversationPacketService implements PacketService {
         }
         String fromUser = requestBody.optString("from", "");
         String toUser = requestBody.optString("to", "");
+        Optional<ConversationEntity> entity = repository.findByCreatorAndWithUser(fromUser, toUser);
+        Optional<ConversationEntity> entityWith = repository.findByCreatorAndWithUser(toUser, fromUser);
+        if(entity.isPresent() || entityWith.isPresent()){
+            String conversationId = entity.isPresent() ? entity.get().getId() : entityWith.get().getId();
+            resPacket.setField(ResponseField.CONVERSATION_ID.getField(), conversationId);
+        } else {
+            // create new conversation and get id
+        }
+    }
 
+    ConversationEntity createNewConversation(String fromUser, String toUser){
+        return null;
     }
 }
