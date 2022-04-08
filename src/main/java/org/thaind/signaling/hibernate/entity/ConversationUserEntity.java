@@ -16,6 +16,8 @@ public class ConversationUserEntity extends AbstractEntity implements Serializab
     private String id;
     @Column(name = "user_id", nullable = false, length = 50)
     private String userId;
+    @Column(name = "conv_id")
+    private String convId;
     @Column(name = "last_seq")
     private long lastSeq;
     @Column(name = "last_seq_seen")
@@ -35,6 +37,14 @@ public class ConversationUserEntity extends AbstractEntity implements Serializab
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getConvId() {
+        return convId;
+    }
+
+    public void setConvId(String convId) {
+        this.convId = convId;
     }
 
     public long getLastSeq() {

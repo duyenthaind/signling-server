@@ -13,11 +13,16 @@ public class Constants {
         PING(99, "ping"),
         PONG(100, "pong"),
         AUTHENTICATE(1, "authenticate"),
-        JOIN_CONVERSATION(2,"user_join_conversation"),
-        JOIN_ROOM(3,"user_join_room"),
-        USER_JOINED_ROOM(4,"user_joined_room"),
-        USER_LEAVE_ROOM_OR_TIMEOUT(5,"user_leaved_room"),
-        TIMEOUT_PICKUP(6,"timeout_pickup_call")
+        JOIN_CONVERSATION(2, "user_join_conversation"),
+        JOIN_ROOM(3, "user_join_room"),
+        USER_JOINED_ROOM(4, "user_joined_room"),
+        USER_LEAVE_ROOM_OR_TIMEOUT(5, "user_leaved_room"),
+        TIMEOUT_PICKUP(6, "timeout_pickup_call"),
+        CHAT_CREATE_CONVERSATION(7, "chat_create_conversation"),
+        CALL_CREATE_ROOM(8, "call_create_room"),
+        CHAT_MESSAGE(9, "chat_message"),
+        CALL_SDP(10, "call_sdp"),
+        CALL_ICE_CANDIDATE(11, "call_ice_candidate"),
         ;
         private final int serviceType;
         private final String name;
@@ -117,6 +122,7 @@ public class Constants {
         CONVERSATION_ID("conversation_id"),
         ROOM_ID("room_id"),
         DATA("data"),
+        FROM_USER("from_user")
         ;
         private final String field;
 

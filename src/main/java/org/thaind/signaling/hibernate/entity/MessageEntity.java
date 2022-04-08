@@ -23,8 +23,6 @@ public class MessageEntity extends AbstractEntity implements Serializable {
     private String content;
     @Column(name = "from_user", nullable = false, length = 50)
     private String fromUser;
-    @Column(name = "to_user", nullable = false, length = 50)
-    private String toUser;
 
     public String getId() {
         return id;
@@ -66,11 +64,4 @@ public class MessageEntity extends AbstractEntity implements Serializable {
         this.fromUser = fromUser;
     }
 
-    public String getToUser() {
-        return toUser;
-    }
-
-    public void setToUser(String toUser) {
-        this.toUser = toUser;
-    }
 }

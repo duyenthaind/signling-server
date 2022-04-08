@@ -32,4 +32,22 @@ public class RoomRepositoryImpl implements RoomRepository {
         }
         return null;
     }
+
+    @Override
+    public RoomEntity findByFromAndToUser(String fromUser, String toUser) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "from RoomEntity where (creator = :creator and withUser = :withUser)" +
+                    "or (creator = :withUser and withUser = :creator)";
+            Query<RoomEntity> query = session.createQuery(hql)
+                    .setParameter("creator", fromUser)
+                    .setParameter("withUser", toUser);
+            List<RoomEntity> list = query.list();
+            if (!list.isEmpty()) {
+                return list.get(0);
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Find Room by 2 user id error ", ex);
+        }
+        return null;
+    }
 }

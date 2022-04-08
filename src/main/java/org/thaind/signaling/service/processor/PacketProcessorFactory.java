@@ -27,6 +27,11 @@ public class PacketProcessorFactory {
         SERVICES.put(PacketServiceType.AUTHENTICATE, AuthenticationPacketService.class);
         SERVICES.put(PacketServiceType.JOIN_CONVERSATION, JoinConversationPacketService.class);
         SERVICES.put(PacketServiceType.JOIN_ROOM, JoinRoomPacketService.class);
+        SERVICES.put(PacketServiceType.CHAT_CREATE_CONVERSATION, ChatCreateConversationPacketService.class);
+        SERVICES.put(PacketServiceType.CALL_CREATE_ROOM, CallCreateRoomPacketService.class);
+        SERVICES.put(PacketServiceType.CHAT_MESSAGE, ChatMessagePacketService.class);
+        SERVICES.put(PacketServiceType.CALL_SDP, CallSdpCandidatePacketService.class);
+        SERVICES.put(PacketServiceType.CALL_ICE_CANDIDATE, CallSdpCandidatePacketService.class);
     }
 
     public static Optional<PacketService> factoryService(PacketServiceType packetServiceType) {

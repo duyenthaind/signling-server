@@ -10,6 +10,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author duyenthai
@@ -31,5 +32,22 @@ public class ConversationUserRepositoryImpl implements ConversationUserRepositor
             LOGGER.error("Find contact by id error ", ex);
         }
         return null;
+    }
+
+    @Override
+    public Optional<ConversationUserEntity> findByUserIdAndConversationId(String userId, String convId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "from ConversationUserEntity where userId = :userId and convId = :convId";
+            Query<ConversationUserEntity> query = session.createQuery(hql)
+                    .setParameter("userId", userId)
+                    .setParameter("convId", convId);
+            List<ConversationUserEntity> list = query.list();
+            if (!list.isEmpty()) {
+                return Optional.of(list.get(0));
+            }
+        } catch (Exception ex) {
+            LOGGER.error("Find conversation user by userid and convid error ", ex);
+        }
+        return Optional.empty();
     }
 }

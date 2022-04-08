@@ -13,6 +13,7 @@ import org.thaind.signaling.repository.impl.ConversationRepositoryImpl;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 
 /**
@@ -30,6 +31,7 @@ public class ChatConversation {
     private Timeout timeoutRemoveConversation;
     private ConversationEntity conversationEntity;
     private long lastTimeNewMessage;
+    private final AtomicLong SEQ_GENERATOR;
 
     private final ConversationRepository repository = new ConversationRepositoryImpl();
 
@@ -39,6 +41,11 @@ public class ChatConversation {
         ChatConversationManager.getInstance().addNewChatConversation(this);
         lastTimeNewMessage = System.currentTimeMillis() / 1000L;
         createTimeoutRemoveConversation(this);
+        if (conversationEntity != null) {
+            SEQ_GENERATOR = new AtomicLong(conversationEntity.getSeq());
+        } else {
+            SEQ_GENERATOR = new AtomicLong();
+        }
     }
 
     public Response addConnection(UserConnection userConnection) {
@@ -85,6 +92,10 @@ public class ChatConversation {
                 connection.sendPacket(packet);
             }
         }
+    }
+
+    public long incrementSeqAndGet(){
+        return SEQ_GENERATOR.incrementAndGet();
     }
 
     public String getConversationId() {
