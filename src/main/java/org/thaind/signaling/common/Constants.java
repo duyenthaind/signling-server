@@ -23,6 +23,7 @@ public class Constants {
         CHAT_MESSAGE(9, "chat_message"),
         CALL_SDP(10, "call_sdp"),
         CALL_ICE_CANDIDATE(11, "call_ice_candidate"),
+        CHAT_GET_MESSAGE(12,"chat_get_message"),
         ;
         private final int serviceType;
         private final String name;

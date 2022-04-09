@@ -32,6 +32,7 @@ public class PacketProcessorFactory {
         SERVICES.put(PacketServiceType.CHAT_MESSAGE, ChatMessagePacketService.class);
         SERVICES.put(PacketServiceType.CALL_SDP, CallSdpCandidatePacketService.class);
         SERVICES.put(PacketServiceType.CALL_ICE_CANDIDATE, CallSdpCandidatePacketService.class);
+        SERVICES.put(PacketServiceType.CHAT_GET_MESSAGE,ChatGetMessagePacketService.class);
     }
 
     public static Optional<PacketService> factoryService(PacketServiceType packetServiceType) {

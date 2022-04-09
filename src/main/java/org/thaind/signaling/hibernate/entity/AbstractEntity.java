@@ -8,9 +8,9 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public abstract class AbstractEntity {
-    @Column(name = "createdAt")
+    @Column(name = "createdAt", columnDefinition = "default 0")
     private long createdAt;
-    @Column(name = "updatedAt")
+    @Column(name = "updatedAt", columnDefinition = "default 0")
     private long updatedAt;
 
     public long getCreatedAt() {
