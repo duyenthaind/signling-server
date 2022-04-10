@@ -1,6 +1,7 @@
 package org.thaind.signaling.dto;
 
 import com.corundumstudio.socketio.SocketIOClient;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.channel.Channel;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 import io.netty.util.HashedWheelTimer;
@@ -29,13 +30,15 @@ public class UserConnection {
 
     private boolean isForCall;
 
+    private final Timeout timeoutAuthenticate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     // webSocket
     private Channel webSocketChannel;
     // socket IO
     private SocketIOClient socketIOClient;
     private long lastTimeReceivePacket = System.currentTimeMillis();
     private String userId;
-    private final Timeout timeoutAuthenticate;
     private CallRoom callRoom;
     private List<ChatConversation> listConversations = new CopyOnWriteArrayList<>();
 
@@ -69,7 +72,9 @@ public class UserConnection {
                 res.put("body", packet.getBody());
                 this.webSocketChannel.writeAndFlush(new TextWebSocketFrame(res.toString()));
             } else if (this.socketIOClient != null) {
-                this.socketIOClient.sendEvent(Constants.SocketIoEvent.EVENT_PACKET.getEvent(), new EventPacket(packet.getServiceType().getServiceType(), packet.getBodyString()));
+//                this.socketIOClient.sendEvent(Constants.SocketIoEvent.EVENT_PACKET.getEvent(), new EventPacket(packet.getServiceType().getServiceType(), packet.getBodyString()));
+                EventPacket eventPacket = new EventPacket(packet.getServiceType().getServiceType(), packet.getBodyString());
+                this.socketIOClient.sendEvent(Constants.SocketIoEvent.EVENT_PACKET.getEvent(), objectMapper.writeValueAsString(eventPacket));
             }
         } catch (Exception ex) {
             LOGGER.error("Error send packet", ex);
@@ -78,7 +83,7 @@ public class UserConnection {
 
     public void disconnect() {
         try {
-            LOGGER.info(String.format("Connection with channel %s, on disconnect", this.webSocketChannel));
+            LOGGER.info(String.format("Connection %s with channel %s, ioClient %s, on disconnect", this, this.webSocketChannel, this.socketIOClient));
             if (callRoom != null) {
                 callRoom.userLeaveRoom(this);
             }
