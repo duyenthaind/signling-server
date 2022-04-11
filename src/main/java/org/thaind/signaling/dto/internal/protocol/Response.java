@@ -6,6 +6,9 @@ import org.thaind.signaling.common.Constants;
  * @author duyenthai
  */
 public class Response {
+
+    private static final Response OK = new Response(Constants.ResponseType.OK.getRes(), "Ok");
+
     private int res;
     private String message;
 
@@ -38,7 +41,7 @@ public class Response {
     }
 
     public static Response ok() {
-        return new Response(Constants.ResponseType.OK.getRes(), "Ok");
+        return OK;
     }
 
     public static Response notFound() {

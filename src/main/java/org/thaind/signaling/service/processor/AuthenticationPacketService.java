@@ -38,7 +38,7 @@ public class AuthenticationPacketService implements PacketService {
     @Override
     public void processPacket(Packet packet, UserConnection userConnection) {
         Packet resPacket = new Packet();
-        packet.setServiceType(packet.getServiceType());
+        resPacket.setServiceType(packet.getServiceType());
         AuthCode authCode = AuthCode.INIT;
         JSONObject body = packet.getBody();
         String accessToken = body == null ? "" : body.optString("accessToken", "");
@@ -88,6 +88,7 @@ public class AuthenticationPacketService implements PacketService {
         }
         if (authCode == AuthCode.INIT) {
             authCode = AuthCode.SUCCESS;
+            resPacket.setField(ResponseField.USER_ID.getField(), userConnection.getUserId());
         }
         resPacket.setField(ResponseField.RES.getField(), authCode.value);
         userConnection.sendPacket(resPacket);

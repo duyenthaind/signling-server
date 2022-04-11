@@ -36,13 +36,28 @@ public class SocketIoClientTest {
                 try {
                     System.out.println("Ping back directly");
                     String event = objectMapper.writeValueAsString(eventPacket);
-                    System.out.println(event);
+//                    System.out.println(event);
                     socket.emit("EventPacket", event);
 //                    socket.emit("EventPacket", eventPacket);
                 } catch (JsonProcessingException e) {
                     e.printStackTrace();
                 }
 //                socket.emit("abc","Abc");
+            });
+            socket.on("connect", object -> {
+                System.out.println(Arrays.toString(object));
+//                socket.emit("abc","Abc");
+                EventPacket eventPacket = new EventPacket(Constants.PacketServiceType.PING.getServiceType(), "");
+                ObjectMapper objectMapper = new ObjectMapper();
+                try {
+                    System.out.println("Ping back directly");
+                    String event = objectMapper.writeValueAsString(eventPacket);
+//                    System.out.println(event);
+                    socket.emit("EventPacket", event);
+//                    socket.emit("EventPacket", eventPacket);
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
             });
             socket.on("EventPacket", object -> {
                 System.out.println("Res packet " + Arrays.toString(object));

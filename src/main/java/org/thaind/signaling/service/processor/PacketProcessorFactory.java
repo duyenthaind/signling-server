@@ -30,7 +30,8 @@ public class PacketProcessorFactory {
         SERVICES.put(PacketServiceType.CHAT_CREATE_CONVERSATION, ChatCreateConversationPacketService.class);
         SERVICES.put(PacketServiceType.CALL_CREATE_ROOM, CallCreateRoomPacketService.class);
         SERVICES.put(PacketServiceType.CHAT_MESSAGE, ChatMessagePacketService.class);
-        SERVICES.put(PacketServiceType.CALL_SDP, CallSdpCandidatePacketService.class);
+        SERVICES.put(PacketServiceType.CALL_SDP_OFFER, CallSdpCandidatePacketService.class);
+        SERVICES.put(PacketServiceType.CALL_SDP_ANSWER, CallSdpCandidatePacketService.class);
         SERVICES.put(PacketServiceType.CALL_ICE_CANDIDATE, CallSdpCandidatePacketService.class);
         SERVICES.put(PacketServiceType.CHAT_GET_MESSAGE,ChatGetMessagePacketService.class);
     }

@@ -7,6 +7,9 @@ public class EventPacket {
     private int service;
     private String body;
 
+    public EventPacket() {
+    }
+
     public EventPacket(int service, String body) {
         this.service = service;
         this.body = body;

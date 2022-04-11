@@ -75,6 +75,7 @@ public class JoinRoomPacketService implements PacketService {
         }
         resPacket.setField(ResponseField.RES.getField(), magic);
         resPacket.setField(ResponseField.MESSAGE.getField(), msg);
+        userConnection.sendPacket(resPacket);
     }
 
     Optional<CallRoom> getOrCreateNewRoom(String roomId, UserConnection userConnection) {

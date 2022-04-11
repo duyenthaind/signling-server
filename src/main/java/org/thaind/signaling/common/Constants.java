@@ -21,9 +21,10 @@ public class Constants {
         CHAT_CREATE_CONVERSATION(7, "chat_create_conversation"),
         CALL_CREATE_ROOM(8, "call_create_room"),
         CHAT_MESSAGE(9, "chat_message"),
-        CALL_SDP(10, "call_sdp"),
+        CALL_SDP_OFFER(10, "call_sdp_offer"),
         CALL_ICE_CANDIDATE(11, "call_ice_candidate"),
         CHAT_GET_MESSAGE(12,"chat_get_message"),
+        CALL_SDP_ANSWER(13, "call_sdp_answer")
         ;
         private final int serviceType;
         private final String name;
@@ -123,7 +124,8 @@ public class Constants {
         CONVERSATION_ID("conversation_id"),
         ROOM_ID("room_id"),
         DATA("data"),
-        FROM_USER("from_user")
+        FROM_USER("from_user"),
+        USER_ID("user_id"),
         ;
         private final String field;
 

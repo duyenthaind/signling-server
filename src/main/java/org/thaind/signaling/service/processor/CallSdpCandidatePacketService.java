@@ -40,7 +40,7 @@ public class CallSdpCandidatePacketService implements PacketService {
         }
         String roomId = requestBody.optString("roomId");
         if (magic == 0) {
-            if (userConnection.getCallRoom().getRoomId().equals(roomId)) {
+            if (!userConnection.getCallRoom().getRoomId().equals(roomId)) {
                 magic = 2;
                 msg = "Wrong room";
             }

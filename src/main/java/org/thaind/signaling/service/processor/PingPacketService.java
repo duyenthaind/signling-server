@@ -21,6 +21,6 @@ public class PingPacketService implements PacketService {
         res.setField(ResponseField.RES.getField(), 0);
         res.setField(ResponseField.MESSAGE.getField(), "Pong");
 
-        userConnection.sendPacket(packet);
+        userConnection.sendPacket(res);
     }
 }
