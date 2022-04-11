@@ -8,6 +8,7 @@ import org.thaind.signaling.repository.ConversationRepository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
@@ -40,9 +41,11 @@ public class ConversationRepositoryImpl implements ConversationRepository {
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
             CriteriaQuery<ConversationEntity> criteriaQuery = criteriaBuilder.createQuery(ConversationEntity.class);
             Root<ConversationEntity> rootObject = criteriaQuery.from(ConversationEntity.class);
+            Predicate predicateCreator = criteriaBuilder.equal(rootObject.get("creator"), creator);
+            Predicate predicateWithUser = criteriaBuilder.equal(rootObject.get("withUser"), withUser);
             criteriaQuery.select(rootObject)
-                    .where(criteriaBuilder.equal(rootObject.get("creator"), creator))
-                    .where(criteriaBuilder.equal(rootObject.get("withUser"), withUser));
+                    .where(criteriaBuilder.and(predicateCreator, predicateWithUser));
+//                    .where(criteriaBuilder.equal(rootObject.get("withUser"), withUser));
             Query<ConversationEntity> query = session.createQuery(criteriaQuery);
             List<ConversationEntity> list = query.getResultList();
             if (!list.isEmpty()) {

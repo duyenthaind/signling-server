@@ -52,6 +52,9 @@ public class ChatConversation {
         if (conversationEntity == null) {
             return Response.notFound();
         }
+        if (this.userConnections.contains(userConnection)) {
+            return Response.ok();
+        }
         if (userConnection.getUserId().equals(conversationEntity.getCreator()) || userConnection.getUserId().equals(conversationEntity.getWithUser())) {
             userConnections.add(userConnection);
             return Response.ok();
@@ -84,7 +87,7 @@ public class ChatConversation {
     }
 
     public void sendPacketToOtherConnection(Packet packet, UserConnection userConnection) {
-        if (this.userConnections.contains(userConnection)) {
+        if (!this.userConnections.contains(userConnection)) {
             return;
         }
         for (UserConnection connection : userConnections) {
@@ -94,7 +97,7 @@ public class ChatConversation {
         }
     }
 
-    public long incrementSeqAndGet(){
+    public long incrementSeqAndGet() {
         return SEQ_GENERATOR.incrementAndGet();
     }
 

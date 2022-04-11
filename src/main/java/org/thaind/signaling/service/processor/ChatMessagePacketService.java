@@ -117,7 +117,7 @@ public class ChatMessagePacketService implements PacketService {
     MessageEntity saveNewMessage(String body, String userId, ConversationEntity conversationEntity) {
         MessageEntity messageEntity = new MessageEntity();
         messageEntity.setId(UUID.randomUUID().toString());
-        messageEntity.setContent(conversationEntity.getId());
+        messageEntity.setConvId(conversationEntity.getId());
         messageEntity.setSeq(conversationEntity.getSeq());
         messageEntity.setContent(body);
         messageEntity.setFromUser(userId);
