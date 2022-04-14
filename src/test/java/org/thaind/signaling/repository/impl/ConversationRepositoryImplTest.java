@@ -35,7 +35,7 @@ class ConversationRepositoryImplTest {
     @Test
     void testFetch1(){
         Optional<ConversationEntity> e = REPOSITORY.findByCreatorAndWithUser("9af30d10-47da-46d1-a488-fd61e5d8af88", "id111111111");
-        assertTrue(e.isEmpty());
+        assertTrue(!e.isPresent());
 //        System.out.println(e.get());
     }
 }

@@ -20,7 +20,7 @@ public abstract class Processor {
 
     public static void processPacket(Packet packet, UserConnection userConnection) {
         Optional<PacketService> packetService = PacketProcessorFactory.factoryService(packet.getServiceType());
-        if (packetService.isEmpty()) {
+        if (!packetService.isPresent()) {
             LOGGER.error(String.format("Packet %s not found supported processor ", packet));
             Packet notFoundServicePacket = new Packet();
             notFoundServicePacket.setServiceType(Constants.PacketServiceType.NOT_FOUND);

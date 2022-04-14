@@ -59,7 +59,7 @@ public class JoinRoomPacketService implements PacketService {
         Optional<CallRoom> room = Optional.empty();
         if (magic == 0) {
             room = getOrCreateNewRoom(roomId, userConnection);
-            if (room.isEmpty()) {
+            if (!room.isPresent()) {
                 magic = 2;
                 msg = "Room not found";
             }
