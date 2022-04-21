@@ -45,8 +45,10 @@ public class CallRoom {
             return Response.notPermitted("You have no permission to join this room");
         }
         userConnection.setCallRoom(this);
-        notifyNewUserJoinRoom(userConnection);
-        this.userConnections.add(userConnection);
+        if (!this.userConnections.contains(userConnection)) {
+            notifyNewUserJoinRoom(userConnection);
+            this.userConnections.add(userConnection);
+        }
         return Response.ok();
     }
 
