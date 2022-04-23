@@ -6,11 +6,14 @@ import org.thaind.signaling.socketio.SocketIOListener;
 import org.thaind.signaling.websocket.WebSocketServer;
 import org.thaind.signaling.worker.PingWorker;
 
+import java.io.File;
+
 /**
  * @author duyenthai
  */
+
 /**
-This is bootstrap class of this project
+ * This is bootstrap class of this project
  */
 public class Start {
     public static void main(String[] args) throws Exception {
@@ -18,7 +21,8 @@ public class Start {
         AppConfig appConfig = SingletonHolder.getBeanOrDefault(AppConfig.class);
         WebSocketServer webSocketServer = new WebSocketServer();
         webSocketServer.start(appConfig.getWebsocketServerPort());
-        SocketIOListener.getInstance().start(appConfig.getSocketIoServerPort());
+        String cerFilePath = System.getProperty("user.dir") + File.separator + "config" + File.separator + appConfig.getCertFilePath();
+        SocketIOListener.getInstance().start(appConfig.getSocketIoServerPort(), cerFilePath, appConfig.getCertPassword());
         Thread pingWorker = new Thread(new PingWorker());
         pingWorker.start();
     }

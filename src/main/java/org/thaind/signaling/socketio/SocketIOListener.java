@@ -12,6 +12,9 @@ import org.thaind.signaling.dto.Packet;
 import org.thaind.signaling.dto.UserConnection;
 import org.thaind.signaling.processors.Processor;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+
 /**
  * @author duyenthai
  */
@@ -24,11 +27,14 @@ public class SocketIOListener {
     private SocketIOListener() {
     }
 
-    public void start(int port) {
+    public void start(int port, String certFilePath, String certPassword) {
         try {
             Configuration config = new Configuration();
             config.setHostname("0.0.0.0");
             config.setPort(port);
+            InputStream certFilePathStream = new FileInputStream(certFilePath);
+            config.setKeyStore(certFilePathStream);
+            config.setKeyStorePassword(certPassword);
 
             SocketConfig socketConfig = new SocketConfig();
             socketConfig.setReuseAddress(true);
@@ -104,7 +110,7 @@ public class SocketIOListener {
 
             server.start();
 
-            LOGGER.info("WebSocket listening on " + port + " (SSL/TLS disabled)");
+            LOGGER.info("WebSocket listening on " + port + " (SSL/TLS enabled)");
         } catch (Exception ex) {
             LOGGER.error("Exception  ", ex);
         }

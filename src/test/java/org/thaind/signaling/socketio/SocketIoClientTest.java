@@ -15,7 +15,7 @@ import java.util.Arrays;
 
 public class SocketIoClientTest {
 
-    private static final String url = "http://localhost:8088";
+    private static final String url = "https://localhost:8088";
 
     public static void main(String[] args) {
         try {
