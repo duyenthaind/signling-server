@@ -6,6 +6,7 @@ import io.netty.util.Timer;
 import io.netty.util.TimerTask;
 import org.json.JSONObject;
 import org.thaind.signaling.cache.RoomCallManager;
+import org.thaind.signaling.cache.UserConnectionManager;
 import org.thaind.signaling.common.Constants;
 import org.thaind.signaling.dto.internal.protocol.Response;
 import org.thaind.signaling.hibernate.entity.RoomEntity;
@@ -46,8 +47,8 @@ public class CallRoom {
         }
         userConnection.setCallRoom(this);
         if (!this.userConnections.contains(userConnection)) {
-            notifyNewUserJoinRoom(userConnection);
             this.userConnections.add(userConnection);
+            new Thread(()-> notifyRequestJoinRoom(userConnection)).start();
         }
         return Response.ok();
     }
@@ -72,11 +73,19 @@ public class CallRoom {
         }
     }
 
-    private void notifyNewUserJoinRoom(UserConnection connection) {
-        Packet packet = new Packet();
-        packet.setServiceType(Constants.PacketServiceType.USER_JOINED_ROOM);
-        packet.setBody(new JSONObject());
-        sendPacketToOtherConnection(packet, connection);
+    private void notifyRequestJoinRoom(UserConnection connection) {
+        // send only when creating the room
+        if (this.userConnections.size() <= 1) {
+            Packet packet = new Packet();
+            packet.setServiceType(Constants.PacketServiceType.USER_JOINED_ROOM);
+            packet.setBody(new JSONObject());
+            packet.setField(Constants.ResponseField.ROOM_ID.getField(), this.roomId);
+            String toUser = roomEntity.getCreator().equals(connection.getUserId()) ? roomEntity.getWithUser() : roomEntity.getCreator();
+            UserConnection toConnection = UserConnectionManager.getInstance().getConnectionOfUser(String.format("%s_for_call", toUser));
+            if (toConnection != null) {
+                toConnection.sendPacket(packet);
+            }
+        }
     }
 
     private void notifyUserLeaveRoom(UserConnection connection) {
