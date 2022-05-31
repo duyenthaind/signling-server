@@ -36,8 +36,7 @@ public class RoomRepositoryImpl implements RoomRepository {
     @Override
     public RoomEntity findByFromAndToUser(String fromUser, String toUser) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            String hql = "from RoomEntity where (creator = :creator and withUser = :withUser)" +
-                    "or (creator = :withUser and withUser = :creator)";
+            String hql = "from RoomEntity where (creator = :creator and withUser = :withUser)";
             Query<RoomEntity> query = session.createQuery(hql)
                     .setParameter("creator", fromUser)
                     .setParameter("withUser", toUser);
